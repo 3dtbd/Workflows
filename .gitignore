@@ -100,4 +100,7 @@ RWT_Cache
 RealWorldTerrainPrefs.xml
 
 # Assets
-!Assets/3dtbd
+Assets/
+Assets/*.meta
+!Assets/3dtbd/
+!Assets/3dtbd.meta
