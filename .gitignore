@@ -1,12 +1,9 @@
 # This .gitignore file should be placed at the root of your Unity project directory
 
-
-
-# My Personal ignores
-.vscode/
-.idea/
 # because all my own assets are in Assets/_local or Assets/_Project. The rest are third party
 /Assets/[A-Za-z0-9]*/
+!/Assets/Data
+!/Assets/Editor
 
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
@@ -94,13 +91,3 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-# Real World Terrain
-RWT_Cache
-RealWorldTerrainPrefs.xml
-
-# Assets
-Assets/
-Assets/*.meta
-!Assets/3dtbd/
-!Assets/3dtbd.meta

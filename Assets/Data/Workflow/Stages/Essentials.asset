@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aa9e00d840482446a7abf8866b5e6dc, type: 3}
+  m_Name: Essentials
+  m_EditorClassIdentifier: 
+  DescriptorIDs: c2e6f3ff
+  Descriptors:
+  - {fileID: 11400000, guid: f5d50623e3d34934e85f86b750e4aeb7, type: 2}
