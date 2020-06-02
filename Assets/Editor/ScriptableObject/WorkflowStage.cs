@@ -29,7 +29,7 @@ namespace threeDtbd.Workflow.PackageManagement
 
         public string DataDirectory
         {
-            get {  return EditorPrefs.GetString(WorkflowConstants.WORKFLOW_DATA_DIR_PREF_KEY); }
+            get {  return EditorPrefs.GetString(WorkflowSettings.WORKFLOW_DATA_DIR_PREF_KEY); }
         }
 
         public int NotInstalledCount { 
@@ -61,7 +61,7 @@ namespace threeDtbd.Workflow.PackageManagement
         public void Add(AssetDescriptor desc)
         {
             //TODO get this from the WorkflowConstants (and move the equivalents from WorkflowManagerWindow)
-            string path = DataDirectory + "/package/" + desc.name + ".asset";
+            string path = WorkflowSettings.descriptorsDataDirectory + desc.name + ".asset";
             AssetDescriptor originalDesc = AssetDatabase.LoadAssetAtPath<AssetDescriptor>(path);
             if (originalDesc != null)
             {

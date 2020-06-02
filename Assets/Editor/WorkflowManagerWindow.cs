@@ -13,12 +13,8 @@ namespace threeDtbd.Workflow.PackageManagement
 {
     public class WorkflowManagerWindow : EditorWindow
     {
-        private string assetCacheDirectory = "F:\\Unity\\Asset Store-5.x";
-        private string workflowDataDirectory = "Assets/Data/Asset Lists";
-        private string descriptorsDataDirectory;
         public ProjectWorkflow workflow;
-        private string[] openSourceGitURIs = new string[] { "git@github.com:3dtbd/Textures.git", "git@github.com:3dtbd/DevLogger.git", "git@github.com:3dtbd/Models.git", "git@github.com:3dtbd/VegetationStudioProExtensions.git" };
-
+        
         private double refreshFrequency = 2;
         private double nextRefreshTime = 0;
 
@@ -30,6 +26,10 @@ namespace threeDtbd.Workflow.PackageManagement
         private Vector2 notInstalledPackageListScrollPos;
         private Vector2 availablePackageListScrollPos;
         private string filterText;
+
+        List<AssetDescriptor> updatedPackageList;
+        private WorkflowStage newWorkflowStage;
+        private string newWorkflowStageName;
 
         private List<AssetDescriptor> CachedPackagesAndAssets
         {
@@ -54,11 +54,6 @@ namespace threeDtbd.Workflow.PackageManagement
             }
         }
 
-        List<AssetDescriptor> updatedPackageList;
-        private WorkflowStage newWorkflowStage;
-        private string stagesDataDirectory;
-        private string newWorkflowStageName;
-
         [MenuItem("Tools/3D TBD/Workflow Manager")]
         public static void ShowWindow()
         {
@@ -67,21 +62,12 @@ namespace threeDtbd.Workflow.PackageManagement
 
         private void OnEnable()
         {
-            // TODO The default needs to be set to the normal Unity default directory 
-            assetCacheDirectory = EditorPrefs.GetString(WorkflowConstants.ASSET_CACHE_DIR_PREF_KEY, assetCacheDirectory);
-            workflowDataDirectory = EditorPrefs.GetString(WorkflowConstants.WORKFLOW_DATA_DIR_PREF_KEY, workflowDataDirectory);
-            descriptorsDataDirectory = workflowDataDirectory + "/Asset Descriptors/";
-            stagesDataDirectory = workflowDataDirectory + "/Stages/";
-
-            Directory.CreateDirectory(descriptorsDataDirectory);
-            Directory.CreateDirectory(stagesDataDirectory);
+            WorkflowSettings.Load();
         }
 
         private void OnDisable()
         {
-            EditorPrefs.SetString(WorkflowConstants.ASSET_CACHE_DIR_PREF_KEY, assetCacheDirectory);
-            EditorPrefs.SetString(WorkflowConstants.WORKFLOW_DATA_DIR_PREF_KEY, workflowDataDirectory);
-            AssetDatabase.SaveAssets();
+            WorkflowSettings.Save();
         }
 
         void OnGUI()
@@ -115,7 +101,7 @@ namespace threeDtbd.Workflow.PackageManagement
             if (GUILayout.Button("Create New Workflow Configuration"))
             {
                 workflow = ScriptableObject.CreateInstance<ProjectWorkflow>();
-                string path = AssetDatabase.GenerateUniqueAssetPath(workflowDataDirectory + "/" + Application.productName + ".asset");
+                string path = AssetDatabase.GenerateUniqueAssetPath(WorkflowSettings.workflowDataDirectory + "/" + Application.productName + ".asset");
                 AssetDatabase.CreateAsset(workflow, path);
                 AssetDatabase.SaveAssets();
             }
@@ -130,7 +116,7 @@ namespace threeDtbd.Workflow.PackageManagement
             EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(newWorkflowStageName));
             if (GUILayout.Button("Create New Workflow Stage"))
             {
-                string path = stagesDataDirectory + newWorkflowStageName + ".asset";
+                string path = WorkflowSettings.stagesDataDirectory + newWorkflowStageName + ".asset";
                 newWorkflowStage = AssetDatabase.LoadAssetAtPath<WorkflowStage>(path);
                 if (newWorkflowStage == null)
                 {
@@ -304,12 +290,12 @@ namespace threeDtbd.Workflow.PackageManagement
 
             // Local Assets
             // TODO make the location of local asset cache configurable
-            ProcessAssetsDirectory(assetCacheDirectory);
+            ProcessAssetsDirectory(WorkflowSettings.assetCacheDirectory);
 
             // 3D TBD Collection
-            for (int idx = 0; idx < openSourceGitURIs.Length; idx++)
+            for (int idx = 0; idx < WorkflowSettings.openSourceGitURIs.Length; idx++)
             {
-                updatedPackageList.Add(AssetDescriptor.CreateInstanceFromGitHub(openSourceGitURIs[idx]));
+                updatedPackageList.Add(AssetDescriptor.CreateInstanceFromGitHub(WorkflowSettings.openSourceGitURIs[idx]));
             }
 
             // Internal Packages
@@ -368,20 +354,20 @@ namespace threeDtbd.Workflow.PackageManagement
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PrefixLabel("Asset Cache Directory");
-            assetCacheDirectory = EditorGUILayout.TextField(assetCacheDirectory);
+            WorkflowSettings.assetCacheDirectory = EditorGUILayout.TextField(WorkflowSettings.assetCacheDirectory);
             if (GUILayout.Button("Browse"))
             {
-                assetCacheDirectory = EditorUtility.OpenFolderPanel("Select Asset Cache Folder", assetCacheDirectory, "");
+                WorkflowSettings.assetCacheDirectory = EditorUtility.OpenFolderPanel("Select Asset Cache Folder", WorkflowSettings.assetCacheDirectory, "");
             }
             EditorGUILayout.EndHorizontal();
 
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PrefixLabel("Data Directory");
-            workflowDataDirectory = EditorGUILayout.TextField(workflowDataDirectory);
+            WorkflowSettings.workflowDataDirectory = EditorGUILayout.TextField(WorkflowSettings.workflowDataDirectory);
             if (GUILayout.Button("Browse"))
             {
-                workflowDataDirectory = EditorUtility.OpenFolderPanel("Select Asset Cache Folder", workflowDataDirectory, "");
+                WorkflowSettings.workflowDataDirectory = EditorUtility.OpenFolderPanel("Select Asset Cache Folder", WorkflowSettings.workflowDataDirectory, "");
             }
             EditorGUILayout.EndHorizontal();
         }
