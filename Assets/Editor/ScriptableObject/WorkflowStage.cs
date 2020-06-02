@@ -60,8 +60,7 @@ namespace threeDtbd.Workflow.PackageManagement
 
         public void Add(AssetDescriptor desc)
         {
-            //TODO get this from the WorkflowConstants (and move the equivalents from WorkflowManagerWindow)
-            string path = WorkflowSettings.descriptorsDataDirectory + desc.name + ".asset";
+            string path = WorkflowSettings.descriptorsDataDirectory + "/" + desc.name + ".asset";
             AssetDescriptor originalDesc = AssetDatabase.LoadAssetAtPath<AssetDescriptor>(path);
             if (originalDesc != null)
             {
