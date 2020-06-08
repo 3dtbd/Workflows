@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
+using WizardsCode.Controller;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace threeDtbd.Workflow.PackageManagement
@@ -142,7 +143,7 @@ namespace threeDtbd.Workflow.PackageManagement
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PrefixLabel("New Package List");
+            EditorGUILayout.PrefixLabel("New Stage");
             newWorkflowStage = EditorGUILayout.ObjectField(newWorkflowStage, typeof(WorkflowStage), false) as WorkflowStage;
             if (newWorkflowStage != null)
             {
@@ -151,6 +152,8 @@ namespace threeDtbd.Workflow.PackageManagement
                     workflow.stages.Add(newWorkflowStage);
                     workflow.expandPackageListInGUI.Add(false);
                     newWorkflowStage = null;
+
+                    AssetDatabase.SaveAssets();
                 }
             }
             EditorGUILayout.EndHorizontal();
@@ -172,14 +175,14 @@ namespace threeDtbd.Workflow.PackageManagement
                 if (workflow.expandPackageListInGUI[i])
                 {
                     EditorGUI.indentLevel++;
-                    OnWorkflowPackagesGUI(i);
+                    OnWorkflowStageGUI(i);
                     EditorGUI.indentLevel--;
                 }
                 EditorGUILayout.EndVertical();
             }
         }
 
-        private void OnWorkflowPackagesGUI(int index)
+        private void OnWorkflowStageGUI(int index)
         {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Package Set");
@@ -198,6 +201,8 @@ namespace threeDtbd.Workflow.PackageManagement
                 return;
             }
             EditorGUILayout.EndHorizontal();
+
+            workflow.stages[index].OnGUI();
 
             int count = workflow.stages[index].NotInstalledCount;
             if (count > 0)

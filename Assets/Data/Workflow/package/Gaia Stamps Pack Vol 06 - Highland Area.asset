@@ -17,5 +17,5 @@ MonoBehaviour:
   unityPackagePath: F:\\Unity\\Asset Store-5.x\Backwoods Gaming\Editor ExtensionsTerrain\Gaia
     Stamps Pack Vol 06 - Highland Area.unitypackage
   gitURI: 
-  scriptDefines: 
+  scriptDefines: GAIA_PRO_PRESENT
   _isLocalPackageInstalled: 1

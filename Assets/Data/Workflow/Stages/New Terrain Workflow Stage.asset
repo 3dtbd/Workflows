@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5aa9e00d840482446a7abf8866b5e6dc, type: 3}
-  m_Name: Gaia Terrain
-  m_EditorClassIdentifier: 
+  m_Script: {fileID: 0}
+  m_Name: New Terrain Workflow Stage
+  m_EditorClassIdentifier: Assembly-CSharp-Editor:threeDtbd.Workflow.PackageManagement:NewBehaviourScript
   DescriptorIDs: 
   Descriptors: []

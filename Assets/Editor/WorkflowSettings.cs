@@ -21,7 +21,8 @@ namespace threeDtbd.Workflow
             "git@github.com:3dtbd/DevLogger.git", "git@github.com:3dtbd/Models.git", 
             "git@github.com:3dtbd/VegetationStudioProExtensions.git",
             "git@github.com:3dtbd/nvjob-water-shader-simple-and-fast.git",
-            "git@github.com:3dtbd/nvjob-sky-shader-simple-and-fast.git" };
+            "git@github.com:3dtbd/nvjob-sky-shader-simple-and-fast.git",
+            "git@github.com:3dtbd/TheFirstPerson.git"};
 
         public static void Load()
         {
