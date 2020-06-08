@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -16,9 +17,18 @@ namespace threeDtbd.Workflow
         public static string descriptorsDataDirectory;
         public static string stagesDataDirectory;
 
-        public static string[] openSourceGitURIs = new string[] { "git@github.com:3dtbd/Textures.git", "git@github.com:3dtbd/DevLogger.git", "git@github.com:3dtbd/Models.git", "git@github.com:3dtbd/VegetationStudioProExtensions.git" };
+        public static string[] openSourceGitURIs = new string[] { "git@github.com:3dtbd/Textures.git", 
+            "git@github.com:3dtbd/DevLogger.git", "git@github.com:3dtbd/Models.git", 
+            "git@github.com:3dtbd/VegetationStudioProExtensions.git",
+            "git@github.com:3dtbd/nvjob-water-shader-simple-and-fast.git",
+            "git@github.com:3dtbd/nvjob-sky-shader-simple-and-fast.git" };
 
         public static void Load()
+        {
+            SetupDataDirectories();
+        }
+
+        private static void SetupDataDirectories()
         {
             // TODO The default needs to be set to the normal Unity default directory 
             assetCacheDirectory = EditorPrefs.GetString(WorkflowSettings.ASSET_CACHE_DIR_PREF_KEY, assetCacheDirectory);
