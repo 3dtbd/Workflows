@@ -80,7 +80,7 @@ namespace threeDtbd.Workflow.PackageManagement
         {
             AssetDescriptor desc = ScriptableObject.CreateInstance<AssetDescriptor>();
             int start = uri.IndexOf(':') + 1;
-            desc.name = uri.Substring(start, uri.Length - ".git".Length - start);
+            desc.name = uri.Substring(start, uri.Length - ".git".Length - start).Replace("/","_");
             desc.gitURI = uri;
             desc.packageType = AssetDescriptor.PackageType.Git;
 

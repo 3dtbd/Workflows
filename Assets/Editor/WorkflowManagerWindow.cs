@@ -21,7 +21,7 @@ namespace threeDtbd.Workflow.PackageManagement
         private enum Tab { Workflow, Settings }
         private int selectedTab;
         private static List<AssetDescriptor> _cachedPackagesAndAssets;
-        private static ListRequest listRequest;
+        private static SearchRequest searchRequest;
         private Vector2 installedPackageListScrollPos;
         private Vector2 notInstalledPackageListScrollPos;
         private Vector2 availablePackageListScrollPos;
@@ -34,7 +34,7 @@ namespace threeDtbd.Workflow.PackageManagement
         private List<AssetDescriptor> CachedPackagesAndAssets
         {
             get {
-                if (EditorApplication.timeSinceStartup > nextRefreshTime && (listRequest == null || listRequest.IsCompleted))
+                if (EditorApplication.timeSinceStartup > nextRefreshTime && (searchRequest == null || searchRequest.IsCompleted))
                 {
                     RefreshPackageList();
                     nextRefreshTime = EditorApplication.timeSinceStartup + refreshFrequency;
@@ -101,7 +101,7 @@ namespace threeDtbd.Workflow.PackageManagement
             if (GUILayout.Button("Create New Workflow Configuration"))
             {
                 workflow = ScriptableObject.CreateInstance<ProjectWorkflow>();
-                string path = AssetDatabase.GenerateUniqueAssetPath(WorkflowSettings.workflowDataDirectory + "/" + Application.productName + ".asset");
+                string path = AssetDatabase.GenerateUniqueAssetPath(WorkflowSettings.workflowDataDirectory + "/" + Application.productName + " Workflow.asset");
                 AssetDatabase.CreateAsset(workflow, path);
                 AssetDatabase.SaveAssets();
             }
@@ -116,7 +116,7 @@ namespace threeDtbd.Workflow.PackageManagement
             EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(newWorkflowStageName));
             if (GUILayout.Button("Create New Workflow Stage"))
             {
-                string path = WorkflowSettings.stagesDataDirectory + newWorkflowStageName + ".asset";
+                string path = WorkflowSettings.stagesDataDirectory + "/" +  newWorkflowStageName + ".asset";
                 newWorkflowStage = AssetDatabase.LoadAssetAtPath<WorkflowStage>(path);
                 if (newWorkflowStage == null)
                 {
@@ -137,8 +137,6 @@ namespace threeDtbd.Workflow.PackageManagement
                         }
                     }
                 }
-
-                newWorkflowStage = newWorkflowStage;
             }
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndHorizontal();
@@ -299,7 +297,7 @@ namespace threeDtbd.Workflow.PackageManagement
             }
 
             // Internal Packages
-            listRequest = Client.List();
+            searchRequest = Client.SearchAll();
             EditorApplication.update += PackageManagerListRequestProgress;
         }
 
@@ -323,11 +321,11 @@ namespace threeDtbd.Workflow.PackageManagement
 
         void PackageManagerListRequestProgress()
         {
-            if (listRequest.IsCompleted)
+            if (searchRequest.IsCompleted)
             {
-                if (listRequest.Status == StatusCode.Success)
+                if (searchRequest.Status == StatusCode.Success)
                 {
-                    foreach (PackageInfo package in listRequest.Result)
+                    foreach (PackageInfo package in searchRequest.Result)
                     {
                         AssetDescriptor desc = ScriptableObject.CreateInstance<AssetDescriptor>();
                         desc.name = package.displayName; 
@@ -337,9 +335,9 @@ namespace threeDtbd.Workflow.PackageManagement
                         updatedPackageList.Add(desc);
                     }
                 }
-                else if (listRequest.Status >= StatusCode.Failure)
+                else if (searchRequest.Status >= StatusCode.Failure)
                 {
-                    Debug.LogError(listRequest.Error.message);
+                    Debug.LogError(searchRequest.Error.message);
                 }
 
                 EditorApplication.update -= PackageManagerListRequestProgress;
