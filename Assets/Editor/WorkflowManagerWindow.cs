@@ -164,7 +164,8 @@ namespace threeDtbd.Workflow.PackageManagement
             OnNewStageGUI();
 
             for (int i = 0; i < workflow.stages.Count; i++) {
-                EditorGUILayout.BeginVertical("Box");
+                EditorGUILayout.Space();
+                EditorGUILayout.BeginVertical();
                 if (workflow.stages[i] != null)
                 {
                     workflow.expandPackageListInGUI[i] = EditorGUILayout.Foldout(workflow.expandPackageListInGUI[i], workflow.stages[i].name + " ( " + workflow.stages[i].UninstalledCount + " of " + workflow.stages[i].Count + " installed)");
@@ -174,17 +175,19 @@ namespace threeDtbd.Workflow.PackageManagement
                 }
                 if (workflow.expandPackageListInGUI[i])
                 {
-                    EditorGUI.indentLevel++;
                     OnWorkflowStageGUI(i);
-                    EditorGUI.indentLevel--;
                 }
                 EditorGUILayout.EndVertical();
+                EditorGUILayout.Space();
             }
         }
 
         private void OnWorkflowStageGUI(int index)
         {
+            workflow.stages[index].OnGUI();
+
             EditorGUILayout.BeginHorizontal();
+
             EditorGUILayout.LabelField("Package Set");
             workflow.stages[index] = EditorGUILayout.ObjectField(workflow.stages[index], typeof(WorkflowStage), false) as WorkflowStage;
 
@@ -201,8 +204,6 @@ namespace threeDtbd.Workflow.PackageManagement
                 return;
             }
             EditorGUILayout.EndHorizontal();
-
-            workflow.stages[index].OnGUI();
 
             int count = workflow.stages[index].NotInstalledCount;
             if (count > 0)
