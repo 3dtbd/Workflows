@@ -208,7 +208,7 @@ namespace threeDtbd.Workflow.PackageManagement
             int count = workflow.stages[index].NotInstalledCount;
             if (count > 0)
             {
-                if (GUILayout.Button("Install " + count + " missing"))
+                if (GUILayout.Button("Install " + count + " missing", GUILayout.Height(180)))
                 {
                     workflow.stages[index].InstallAllInPackage();
                 }

@@ -14,8 +14,8 @@ namespace threeDtbd.Workflow.PackageManagement
     /// 
     /// It contains a list of assets to support the creation of a Terrain.
     /// </summary>
-    [CreateAssetMenu(fileName = "New Terrain Workflow Stage", menuName = "3D TBD/Workflow/Terrain Stage")]
-    public class NewBehaviourScript : WorkflowStage
+    [CreateAssetMenu(fileName = "Terrain Workflow Stage", menuName = "3D TBD/Workflow/Terrain Stage")]
+    public class TerrainWorkflowStage : WorkflowStage
     {
         // TODO: Handle the situation where the Terrains submodule is not in the usual place
         static string m_TerrainDirectory = "Assets/3dtbd/Terrains";
@@ -36,6 +36,8 @@ namespace threeDtbd.Workflow.PackageManagement
             // TODO make scene export parameters configurable
             string exportSceneName = "Heightmap_Only_" + DateTime.Now.ToFileTimeUtc();
             bool exportWithTextures = false;
+            bool exportWithDetails = false;
+            bool exportWithTrees = false;
 
             Directory.CreateDirectory(m_TerrainDataDirectory);
 
@@ -44,13 +46,13 @@ namespace threeDtbd.Workflow.PackageManagement
 
             CopyCameras(exportScene);
             CopyDirectionalLights(exportScene);
-            CopyTerrains(exportWithTextures, m_TerrainDataDirectory, exportScene);
+            CopyTerrains(m_TerrainDataDirectory, exportScene, exportWithTextures);
 
             EditorSceneManager.SaveScene(exportScene, m_TerrainSceneDirectory + "/" + exportSceneName + ".unity");
             EditorSceneManager.CloseScene(exportScene, true);
         }
 
-        private static void CopyTerrains(bool exportWithTextures, string terrainDataDirectory, Scene exportScene)
+        private static void CopyTerrains(string terrainDataDirectory, Scene exportScene, bool exportWithTextures = false, bool exportWithDetails = false, bool exportWithTrees = false )
         {
             Terrain[] terrains = Terrain.activeTerrains;
             for (int i = 0; i < terrains.Length; i++)
@@ -64,7 +66,6 @@ namespace threeDtbd.Workflow.PackageManagement
                 string exportDataPath = terrainDataDirectory + "/" + data.name + ".asset";
                 AssetDatabase.CopyAsset(originalDataPath, exportDataPath);
                 TerrainData newData = AssetDatabase.LoadAssetAtPath<TerrainData>(exportDataPath);
-                newTerrain.terrainData = newData;
 
                 // Copy Textures?
                 if (exportWithTextures)
@@ -75,6 +76,34 @@ namespace threeDtbd.Workflow.PackageManagement
                 {
                     newData.terrainLayers = null;
                 }
+                
+                // Strip Details?
+                if (!exportWithDetails)
+                {
+                    for (int l = 0; l < newData.detailPrototypes.Length; l++)
+                    {
+                        int[,] map = newData.GetDetailLayer(0, 0, newData.detailWidth, newData.detailHeight, l);
+                        for (var y = 0; y < newData.detailHeight; y++)
+                        {
+                            for (var x = 0; x < newData.detailWidth; x++)
+                            {
+                                map[x, y] = 0;
+                            }
+                        }
+                        newData.SetDetailLayer(0, 0, l, map);
+                    }
+                    
+                    newData.detailPrototypes = new DetailPrototype[0];
+                }
+
+                // Strip Trees?
+                if (!exportWithTrees)
+                {
+                    newData.treeInstances = new TreeInstance[0];
+                    newData.treePrototypes = new TreePrototype[0];
+                }
+
+                newTerrain.terrainData = newData;
             }
         }
 
