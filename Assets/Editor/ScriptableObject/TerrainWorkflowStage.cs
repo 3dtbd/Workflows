@@ -21,6 +21,7 @@ namespace threeDtbd.Workflow.PackageManagement
         static string m_TerrainDirectory = "Assets/3dtbd/Terrains";
         static string m_TerrainSceneDirectory = m_TerrainDirectory + "/Scenes";
         static string m_TerrainDataDirectory = m_TerrainDirectory + "/Terrain Data";
+        static string m_TerrainLayersDirectory = m_TerrainDirectory + "/Terrain Layers";
 
         bool exportWithTextures = false;
         bool exportWithDetails = false;
@@ -49,23 +50,39 @@ namespace threeDtbd.Workflow.PackageManagement
 
         private void ExportTerrain()
         {
-            // TODO make scene export parameters configurable
-            string exportSceneName = "Heightmap_Only_" + DateTime.Now.ToFileTimeUtc();
-
             Directory.CreateDirectory(m_TerrainDataDirectory);
+            Directory.CreateDirectory(m_TerrainLayersDirectory);
 
+            string exportSceneName = GenerateSceneName();
             Scene exportScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
             exportScene.name = exportSceneName;
 
             CopyCameras(exportScene);
             CopyDirectionalLights(exportScene);
-            CopyTerrains(m_TerrainDataDirectory, exportScene, exportWithTextures, exportWithDetails, exportWithTrees);
+            CopyTerrains(exportScene, exportWithTextures, exportWithDetails, exportWithTrees);
 
-            EditorSceneManager.SaveScene(exportScene, m_TerrainSceneDirectory + "/" + exportSceneName + ".unity");
+            EditorSceneManager.SaveScene(exportScene, m_TerrainSceneDirectory + "/" + exportScene.name + ".unity");
             EditorSceneManager.CloseScene(exportScene, true);
         }
 
-        private static void CopyTerrains(string terrainDataDirectory, Scene exportScene, bool exportWithTextures, bool exportWithDetails, bool exportWithTrees)
+        private string GenerateSceneName()
+        {
+            string exportSceneName = EditorSceneManager.GetActiveScene().name;
+            string features = "";
+            if (exportWithTextures) features += " Textures";
+            if (exportWithDetails) features += " Details";
+            if (exportWithTrees) features += " Trees";
+            if (features.Length > 0)
+            {
+                exportSceneName += " with";
+                exportSceneName += features;
+            }
+            exportSceneName += " ";
+            exportSceneName += DateTime.Now.ToFileTimeUtc();
+            return exportSceneName.Replace(' ', '_');
+        }
+
+        private static void CopyTerrains(Scene exportScene, bool exportWithTextures, bool exportWithDetails, bool exportWithTrees)
         {
             Terrain[] terrains = Terrain.activeTerrains;
             for (int i = 0; i < terrains.Length; i++)
@@ -76,16 +93,26 @@ namespace threeDtbd.Workflow.PackageManagement
                 // Copy the Terrain Data
                 TerrainData data = terrains[i].terrainData;
                 string originalDataPath = AssetDatabase.GetAssetPath(data);
-                string exportDataPath = terrainDataDirectory + "/" + data.name + ".asset";
+                string exportDataPath = m_TerrainDataDirectory + "/" + exportScene.name + "_" + i + ".asset";
                 AssetDatabase.CopyAsset(originalDataPath, exportDataPath);
                 TerrainData newData = AssetDatabase.LoadAssetAtPath<TerrainData>(exportDataPath);
 
-                // Copy Textures?
+                // Copy or Strip Textures
                 if (exportWithTextures)
                 {
-                    Debug.LogWarning("Not exporting textures just yet");
-                }
-                else
+                    TerrainLayer[] newLayers = new TerrainLayer[newData.terrainLayers.Length];
+
+                    for (int l = 0; l < newData.terrainLayers.Length; l++)
+                    {
+                        TerrainLayer originalLayer = newData.terrainLayers[l];
+                        string originalLayerPath = AssetDatabase.GetAssetPath(originalLayer);
+                        string exportLayerPath = m_TerrainLayersDirectory + "/" + exportScene.name + "_layer_" + l + ".asset";
+                        AssetDatabase.CopyAsset(originalLayerPath, exportLayerPath);
+                        newLayers[l] = AssetDatabase.LoadAssetAtPath<TerrainLayer>(exportLayerPath);
+                    }
+
+                    newData.terrainLayers = newLayers;
+                } else
                 {
                     newData.terrainLayers = null;
                 }
@@ -117,6 +144,7 @@ namespace threeDtbd.Workflow.PackageManagement
                 }
 
                 newTerrain.terrainData = newData;
+                newTerrain.GetComponent<TerrainCollider>().terrainData = newData;
             }
         }
 
