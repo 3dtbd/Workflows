@@ -22,10 +22,26 @@ namespace threeDtbd.Workflow.PackageManagement
         static string m_TerrainSceneDirectory = m_TerrainDirectory + "/Scenes";
         static string m_TerrainDataDirectory = m_TerrainDirectory + "/Terrain Data";
 
+        bool exportWithTextures = false;
+        bool exportWithDetails = false;
+        bool exportWithTrees = false;
+
         internal override void OnGUI()
         {
             base.OnGUI();
-            if (GUILayout.Button("Export Terrain to " + m_TerrainSceneDirectory))
+
+            EditorGUILayout.BeginHorizontal();
+            exportWithTextures = EditorGUILayout.ToggleLeft("Textures", exportWithTextures);
+            exportWithDetails = EditorGUILayout.ToggleLeft("Details", exportWithDetails);
+            exportWithTrees = EditorGUILayout.ToggleLeft("Trees", exportWithTrees);
+            EditorGUILayout.EndHorizontal();
+
+            string label = "Export heightmap";
+            if (exportWithTextures) label += ", textures";
+            if (exportWithDetails) label += ", details";
+            if (exportWithTrees) label += ", trees";
+            label += "\nto " + m_TerrainSceneDirectory;
+            if (GUILayout.Button(label))
             {
                 ExportTerrain();
             }
@@ -35,9 +51,6 @@ namespace threeDtbd.Workflow.PackageManagement
         {
             // TODO make scene export parameters configurable
             string exportSceneName = "Heightmap_Only_" + DateTime.Now.ToFileTimeUtc();
-            bool exportWithTextures = false;
-            bool exportWithDetails = false;
-            bool exportWithTrees = false;
 
             Directory.CreateDirectory(m_TerrainDataDirectory);
 
@@ -46,13 +59,13 @@ namespace threeDtbd.Workflow.PackageManagement
 
             CopyCameras(exportScene);
             CopyDirectionalLights(exportScene);
-            CopyTerrains(m_TerrainDataDirectory, exportScene, exportWithTextures);
+            CopyTerrains(m_TerrainDataDirectory, exportScene, exportWithTextures, exportWithDetails, exportWithTrees);
 
             EditorSceneManager.SaveScene(exportScene, m_TerrainSceneDirectory + "/" + exportSceneName + ".unity");
             EditorSceneManager.CloseScene(exportScene, true);
         }
 
-        private static void CopyTerrains(string terrainDataDirectory, Scene exportScene, bool exportWithTextures = false, bool exportWithDetails = false, bool exportWithTrees = false )
+        private static void CopyTerrains(string terrainDataDirectory, Scene exportScene, bool exportWithTextures, bool exportWithDetails, bool exportWithTrees)
         {
             Terrain[] terrains = Terrain.activeTerrains;
             for (int i = 0; i < terrains.Length; i++)
