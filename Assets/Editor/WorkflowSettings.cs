@@ -11,6 +11,7 @@ namespace threeDtbd.Workflow
     {
         public static string ASSET_CACHE_DIR_PREF_KEY = "AssetCacheDirectory_" + Application.productName;
         public static string WORKFLOW_DATA_DIR_PREF_KEY = "WorkflowDataDirectory_" + Application.productName;
+        public static string PROJECT_WORKFLOW_DATA = "ProjectWorkflowData_" + Application.productName;
 
         public static string assetCacheDirectory = "F:\\Unity\\Asset Store-5.x";
         public static string workflowDataDirectory;

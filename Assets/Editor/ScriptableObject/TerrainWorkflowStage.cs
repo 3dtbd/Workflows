@@ -31,6 +31,11 @@ namespace threeDtbd.Workflow.PackageManagement
         {
             base.OnGUI();
 
+            string docs = "Click the export button below to create a copy of the terrain optionally with textures, details and trees"
+                + "\n\nThen select the terrain in the project window, right click and click `Select Dependencies`."
+                + "\n\nFinally select the menu option `Assets/Export Package...` and uncheck `Include Dependencies`.";
+            EditorGUILayout.HelpBox(docs, MessageType.Info);
+
             EditorGUILayout.BeginHorizontal();
             exportWithTextures = EditorGUILayout.ToggleLeft("Textures", exportWithTextures);
             exportWithDetails = EditorGUILayout.ToggleLeft("Details", exportWithDetails);
@@ -106,7 +111,7 @@ namespace threeDtbd.Workflow.PackageManagement
                     {
                         TerrainLayer originalLayer = newData.terrainLayers[l];
                         string originalLayerPath = AssetDatabase.GetAssetPath(originalLayer);
-                        string exportLayerPath = m_TerrainLayersDirectory + "/" + exportScene.name + "_layer_" + l + ".asset";
+                         string exportLayerPath = m_TerrainLayersDirectory + "/" + exportScene.name + "_layer_" + l + ".asset";
                         AssetDatabase.CopyAsset(originalLayerPath, exportLayerPath);
                         newLayers[l] = AssetDatabase.LoadAssetAtPath<TerrainLayer>(exportLayerPath);
                     }

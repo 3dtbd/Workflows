@@ -57,6 +57,11 @@ namespace threeDtbd.Workflow.PackageManagement
             }
         }
 
+        internal void OnGUI()
+        {
+            GUILayout.Button("It works");
+        }
+
         internal void Install()
         {
             // TODO installing can take a long time, need UI feedback

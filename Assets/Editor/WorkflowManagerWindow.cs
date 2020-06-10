@@ -64,11 +64,14 @@ namespace threeDtbd.Workflow.PackageManagement
         private void OnEnable()
         {
             WorkflowSettings.Load();
+            string path = EditorPrefs.GetString(WorkflowSettings.PROJECT_WORKFLOW_DATA);
+            workflow = AssetDatabase.LoadAssetAtPath(path, typeof(ProjectWorkflow)) as ProjectWorkflow;
         }
 
         private void OnDisable()
         {
             WorkflowSettings.Save();
+            EditorPrefs.SetString(WorkflowSettings.PROJECT_WORKFLOW_DATA, AssetDatabase.GetAssetPath(workflow));
         }
 
         void OnGUI()
@@ -105,6 +108,11 @@ namespace threeDtbd.Workflow.PackageManagement
                 string path = AssetDatabase.GenerateUniqueAssetPath(WorkflowSettings.workflowDataDirectory + "/" + Application.productName + " Workflow.asset");
                 AssetDatabase.CreateAsset(workflow, path);
                 AssetDatabase.SaveAssets();
+            }
+
+            if (workflow != null)
+            {
+                EditorUtility.SetDirty(workflow);
             }
         }
 
@@ -153,7 +161,7 @@ namespace threeDtbd.Workflow.PackageManagement
                     workflow.expandPackageListInGUI.Add(false);
                     newWorkflowStage = null;
 
-                    AssetDatabase.SaveAssets();
+                    EditorUtility.SetDirty(workflow);
                 }
             }
             EditorGUILayout.EndHorizontal();

@@ -58,6 +58,7 @@ namespace threeDtbd.Workflow.PackageManagement
             desc.packageType = AssetDescriptor.PackageType.Package;
 
             Add(desc);
+            EditorUtility.SetDirty(this);
         }           
 
         public void Add(AssetDescriptor desc)
@@ -87,6 +88,8 @@ namespace threeDtbd.Workflow.PackageManagement
 
             Descriptors.Add(desc);
             DescriptorIDs.Add(desc.GetInstanceID());
+
+            EditorUtility.SetDirty(this);
         }
 
         internal bool Contains(AssetDescriptor desc)
@@ -138,6 +141,7 @@ namespace threeDtbd.Workflow.PackageManagement
                     availablePackagesCache.Add(desc);
                 }
             }
+            EditorUtility.SetDirty(this);
         }
 
         internal void InstallAllInPackage()
@@ -148,10 +152,12 @@ namespace threeDtbd.Workflow.PackageManagement
                 {
                     Debug.LogWarning("There was a missing AssetDescriptor in your AssetDescriptorList. It has been removed to prevent errors.");
                     Descriptors.RemoveAt(i);
+                    EditorUtility.SetDirty(Descriptors[i]);
                 }
                 else if (!Descriptors[i].isInstalled)
                 {
                     Descriptors[i].Install();
+                    EditorUtility.SetDirty(Descriptors[i]);
                 }
             }
         }
