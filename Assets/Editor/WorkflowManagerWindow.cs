@@ -192,7 +192,7 @@ namespace threeDtbd.Workflow.PackageManagement
 
         private void OnWorkflowStageGUI(int index)
         {
-            workflow.stages[index].OnGUI();
+            WorkflowStage stage = workflow.stages[index];
 
             EditorGUILayout.BeginHorizontal();
 
@@ -212,6 +212,8 @@ namespace threeDtbd.Workflow.PackageManagement
                 return;
             }
             EditorGUILayout.EndHorizontal();
+
+            workflow.stages[index].OnGUI();
 
             int count = workflow.stages[index].NotInstalledCount;
             if (count > 0)
@@ -234,66 +236,67 @@ namespace threeDtbd.Workflow.PackageManagement
                 EditorGUILayout.BeginVertical("Box");
                 EditorGUILayout.LabelField("Installed", EditorStyles.boldLabel);
                 installedPackageListScrollPos = EditorGUILayout.BeginScrollView(installedPackageListScrollPos);
-                OnPackageGUI(workflow.stages[index], workflow.stages[index].installedPackagesCache);
+                for (int i = 0; i < stage.installedPackagesCache.Count; i++)
+                {
+                    OnInstalledPackageGUI(stage, stage.installedPackagesCache[i]);
+                }
                 EditorGUILayout.EndScrollView();
                 EditorGUILayout.EndVertical();
 
                 EditorGUILayout.BeginVertical("Box");
                 EditorGUILayout.LabelField("Not Installed", EditorStyles.boldLabel);
                 notInstalledPackageListScrollPos = EditorGUILayout.BeginScrollView(notInstalledPackageListScrollPos);
-                OnPackageGUI(workflow.stages[index], workflow.stages[index].notInstalledPackagesCache);
+                for (int i = 0; i < stage.notInstalledPackagesCache.Count; i++)
+                {
+                    OnNotInstalledPackageGUI(stage, stage.notInstalledPackagesCache[i]);
+                }
                 EditorGUILayout.EndScrollView();
                 EditorGUILayout.EndVertical();
 
                 EditorGUILayout.BeginVertical("Box");
                 EditorGUILayout.LabelField("Available", EditorStyles.boldLabel);
                 availablePackageListScrollPos = EditorGUILayout.BeginScrollView(availablePackageListScrollPos, GUILayout.MaxHeight(200));
-                OnPackageGUI(workflow.stages[index], workflow.stages[index].availablePackagesCache);
+                for (int i = 0; i < stage.availablePackagesCache.Count; i++)
+                {
+                    OnAvailablePackageGUI(stage, stage.availablePackagesCache[i]);
+                }
                 EditorGUILayout.EndScrollView();
                 EditorGUILayout.EndVertical();
             }
         }
 
-        private void OnPackageGUI(WorkflowStage packageList, List<AssetDescriptor> packagesToDisplay)
+        private void OnInstalledPackageGUI(WorkflowStage stage, AssetDescriptor desc)
         {
-            if (packagesToDisplay == null)
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(desc.name);
+            if (GUILayout.Button("Remove from Workflow Stage"))
             {
-                EditorGUILayout.LabelField("Empty Asset List");
-                return;
+                stage.Remove(desc.name);
             }
+            EditorGUILayout.EndHorizontal();
+            //desc.OnGUI();
+        }
 
-            AssetDescriptor desc;
-            for (int i = 0; i < packagesToDisplay.Count; i++)
+        private void OnNotInstalledPackageGUI(WorkflowStage stage, AssetDescriptor desc)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(desc.name);
+            if (GUILayout.Button("Install"))
             {
-                desc = packagesToDisplay[i];
-                if (string.IsNullOrEmpty(filterText) || desc.name.ToLower().Contains(filterText.ToLower()))
-                {
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField(desc.name);
-                    if (packageList.Contains(desc))
-                    {
-                        if (GUILayout.Button("Remove from Workflow Stage"))
-                        {
-                            packageList.Remove(desc.name);
-                        }
-                        if (!desc.isInstalled)
-                        {
-                            if (GUILayout.Button("Install"))
-                            {
-                                desc.Install();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (GUILayout.Button("Add to Workflow Stage"))
-                        {
-                            packageList.Add(desc);
-                        }
-                    }
-                    EditorGUILayout.EndHorizontal();
-                }
+                desc.Install();
             }
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void OnAvailablePackageGUI(WorkflowStage stage, AssetDescriptor desc)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(desc.name);
+            if (GUILayout.Button("Add to Workflow Stage"))
+            {
+                stage.Add(desc);
+            }
+            EditorGUILayout.EndHorizontal();
         }
 
         private void RefreshPackageList()

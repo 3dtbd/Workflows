@@ -22,6 +22,7 @@ namespace threeDtbd.Workflow.PackageManagement
         // TODO Why are we keeping DecriptorIDs and Descriptors. Keep just descriptors, but serialize DescriptorIDs
         public List<int> DescriptorIDs = new List<int>();
         public List<AssetDescriptor> Descriptors = new List<AssetDescriptor>();
+
         internal List<AssetDescriptor> installedPackagesCache = new List<AssetDescriptor>();
         internal List<AssetDescriptor> notInstalledPackagesCache = new List<AssetDescriptor>();
         internal List<AssetDescriptor> availablePackagesCache = new List<AssetDescriptor>();
