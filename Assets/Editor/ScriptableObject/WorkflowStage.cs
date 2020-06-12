@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using TheFirstPerson;
 using UnityEditor;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using WizardsCode.Controller;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
@@ -191,35 +187,6 @@ namespace threeDtbd.Workflow.PackageManagement
 
         internal virtual void OnGUI()
         {
-            AddPlayerGUI();
-        }
-
-        internal virtual void AddPlayerGUI()
-        {
-            if (!(FindObjectOfType<FlyCameraController>() || FindObjectOfType<FPSController>()))
-            {
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Add Fly Camera"))
-                {
-                    Camera.main.gameObject.AddComponent<FlyCameraController>();
-                }
-                if (GUILayout.Button("Add First Person"))
-                {
-                    GameObject player = new GameObject("Player");
-                    player.AddComponent<CharacterController>();
-                    player.AddComponent<FPSController>();
-                    Vector3 pos = Vector3.zero;
-                    pos.y = Terrain.activeTerrain.SampleHeight(pos);
-                    player.transform.position = pos;
-
-                    player.transform.rotation = Quaternion.identity;
-
-                    Camera.main.transform.SetParent(player.transform);
-                    Camera.main.transform.localPosition = new Vector3(0, 1.8f, 0);
-                    Camera.main.transform.localRotation = Quaternion.identity;
-                }
-                EditorGUILayout.EndHorizontal();
-            }
         }
     }
 }
