@@ -274,7 +274,7 @@ namespace threeDtbd.Workflow.PackageManagement
                 stage.Remove(desc.name);
             }
             EditorGUILayout.EndHorizontal();
-            //desc.OnGUI();
+            desc.OnGUI();
         }
 
         private void OnNotInstalledPackageGUI(WorkflowStage stage, AssetDescriptor desc)

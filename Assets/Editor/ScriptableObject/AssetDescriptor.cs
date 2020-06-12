@@ -57,9 +57,8 @@ namespace threeDtbd.Workflow.PackageManagement
             }
         }
 
-        internal void OnGUI()
+        virtual internal void OnGUI()
         {
-            GUILayout.Button("It works");
         }
 
         internal void Install()
