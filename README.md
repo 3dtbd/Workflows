@@ -7,5 +7,5 @@ Unity can grind to a halt when it has hundreds of assets installed. This makes w
 3. `git init`
 4. `mkdir Assets/3dtbd`
 5. `cd Assets/3dtbd`
-6. `git submodule add [[Path to your fork]]`
+6. `git clone --recurse-submodules [[Path to your fork]]`
 7. In unity open the Workflow Manager using `Tools/3dtbd/Workflow`
