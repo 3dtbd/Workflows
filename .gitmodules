@@ -1,3 +1,9 @@
 [submodule "Assets/3dtbd/DevLogger"]
 	path = Assets/3dtbd/DevLogger
 	url = git@github.com:3dtbd/DevLogger.git
+[submodule "Assets/3dtbd/Common"]
+	path = Assets/3dtbd/Common
+	url = git@github.com:3dtbd/Common.git
+[submodule "Assets/3dtbd/EditorPowerScripts"]
+	path = Assets/3dtbd/EditorPowerScripts
+	url = git@github.com:3dtbd/EditorPowerScripts.git
