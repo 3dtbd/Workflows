@@ -17,7 +17,7 @@ namespace threeDtbd.Workflow.VersionControl
         /// </summary>
         /// <param name="gitURI">The URI of the repository to clone.</param>
         /// <param name="path">The path relative to the `Assets/` folder into which the repository should be cloned.</param>
-        public static string AddAsRemote(AssetDescriptor desc, string path)
+        public static string AddAsSubmodule(AssetDescriptor desc, string path)
         {
             Process process = Process("submodule add " + desc.gitURI, path);
             process.WaitForExit();

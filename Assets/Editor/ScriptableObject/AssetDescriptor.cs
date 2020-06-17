@@ -72,7 +72,7 @@ namespace threeDtbd.Workflow.PackageManagement
             else if (IsGitPackage)
             {   
                 // TODO the path should be configurable
-                VersionControl.Git.AddAsRemote(this, "3dtbd");
+                VersionControl.Git.AddAsSubmodule(this, "3dtbd");
             }
             else
             {
