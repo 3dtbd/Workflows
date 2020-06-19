@@ -238,7 +238,7 @@ namespace threeDtbd.Workflow.PackageManagement
                 installedPackageListScrollPos = EditorGUILayout.BeginScrollView(installedPackageListScrollPos);
                 for (int i = 0; i < stage.installedPackagesCache.Count; i++)
                 {
-                    if (stage.installedPackagesCache[i].name.ToLower().Contains(filterText.ToLower()))
+                    if (string.IsNullOrEmpty(filterText) || stage.installedPackagesCache[i].name.ToLower().Contains(filterText.ToLower()))
                     {
                         OnInstalledPackageGUI(stage, stage.installedPackagesCache[i]);
                     }
@@ -251,7 +251,7 @@ namespace threeDtbd.Workflow.PackageManagement
                 notInstalledPackageListScrollPos = EditorGUILayout.BeginScrollView(notInstalledPackageListScrollPos);
                 for (int i = 0; i < stage.notInstalledPackagesCache.Count; i++)
                 {
-                    if (stage.notInstalledPackagesCache[i].name.ToLower().Contains(filterText.ToLower()))
+                    if (string.IsNullOrEmpty(filterText) || stage.notInstalledPackagesCache[i].name.ToLower().Contains(filterText.ToLower()))
                     {
                         OnNotInstalledPackageGUI(stage, stage.notInstalledPackagesCache[i]);
                     }
@@ -264,7 +264,7 @@ namespace threeDtbd.Workflow.PackageManagement
                 availablePackageListScrollPos = EditorGUILayout.BeginScrollView(availablePackageListScrollPos, GUILayout.MaxHeight(200));
                 for (int i = 0; i < stage.availablePackagesCache.Count; i++)
                 {
-                    if (stage.availablePackagesCache[i].name.ToLower().Contains(filterText.ToLower()))
+                    if (string.IsNullOrEmpty(filterText) ||  stage.availablePackagesCache[i].name.ToLower().Contains(filterText.ToLower()))
                     {
                         OnAvailablePackageGUI(stage, stage.availablePackagesCache[i]);
                     }
