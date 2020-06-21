@@ -36,7 +36,7 @@ namespace threeDtbd.Workflow.PackageManagement
                             .Select(AssetDatabase.GUIDToAssetPath).Where(x => x.Contains(unityPackagePath)).ToList();
                     if (matchingPackages.Count > 1)
                     {
-                        Debug.LogError("More than one package matching the asset path " + unityPackagePath + ". This is not accounted for in code.");
+                        Debug.LogWarning("More than one package containing the asset path " + unityPackagePath + ". This is not accounted for in code. Not expecting problems but... be aware.");
                     }
                     return matchingPackages.Count > 0;
                 }
