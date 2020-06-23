@@ -18,7 +18,7 @@ namespace threeDtbd.Workflow.PackageManagement
     public class TerrainWorkflowStage : WorkflowStage
     {
         // TODO: Handle the situation where the Terrains submodule is not in the usual place
-        static string m_TerrainDirectory = "Assets/3dtbd/Terrains";
+        static string m_TerrainDirectory = "Assets/3dtbd/Terrains/Assets";
         static string m_TerrainSceneDirectory = m_TerrainDirectory + "/Scenes";
         static string m_TerrainDataDirectory = m_TerrainDirectory + "/Terrain Data";
         static string m_TerrainLayersDirectory = m_TerrainDirectory + "/Terrain Layers";

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using WizardsCode.Controller;
@@ -44,19 +46,7 @@ namespace threeDtbd.Workflow.PackageManagement
                 }
                 return count;
             }
-        }
-
-        public void Add(PackageInfo info)
-        {
-            AssetDescriptor desc = ScriptableObject.CreateInstance<AssetDescriptor>();
-            desc.id = info.packageId;
-            desc.name = info.displayName;
-            desc.unityPackagePath = info.assetPath;
-            desc.packageType = AssetDescriptor.PackageType.Package;
-
-            Add(desc);
-            EditorUtility.SetDirty(this);
-        }           
+        }     
 
         public void Add(AssetDescriptor desc)
         {
