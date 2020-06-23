@@ -7,7 +7,6 @@ using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
-using WizardsCode.Controller;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace threeDtbd.Workflow.PackageManagement

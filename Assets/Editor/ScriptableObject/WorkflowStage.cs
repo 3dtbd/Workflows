@@ -4,7 +4,6 @@ using System.IO;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-using WizardsCode.Controller;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace threeDtbd.Workflow.PackageManagement
