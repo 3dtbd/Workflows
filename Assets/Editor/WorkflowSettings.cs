@@ -37,7 +37,7 @@ namespace threeDtbd.Workflow
         {
             // TODO The default needs to be set to the normal Unity default directory 
             assetCacheDirectory = EditorPrefs.GetString(WorkflowSettings.ASSET_CACHE_DIR_PREF_KEY, assetCacheDirectory);
-            workflowDataDirectory = EditorPrefs.GetString(WorkflowSettings.WORKFLOW_DATA_DIR_PREF_KEY, "Assets/Workflow");
+            workflowDataDirectory = EditorPrefs.GetString(WorkflowSettings.WORKFLOW_DATA_DIR_PREF_KEY, "Assets/3dtbd/WorkflowData");
             descriptorsDataDirectory = workflowDataDirectory + "/Asset Descriptors";
             stagesDataDirectory = workflowDataDirectory + "/Stages";
 

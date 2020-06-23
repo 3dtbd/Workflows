@@ -3,22 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.Serialization;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace threeDtbd.Workflow.PackageManagement
 {
     public class AssetDescriptor : ScriptableObject
     {
+        public string documentation;
+        public string unityForum;
         public enum PackageType {  LocalAsset, Git, Package }
         public PackageType packageType;
         public string id;
-        public string unityPackagePath;
+        [SerializeField, FormerlySerializedAs("unityPackagePath")]
+        private string m_UnityPackagePath;
         public string gitURI;
         public string scriptDefines;
         public bool _isLocalPackageInstalled = false;
+
+        public virtual string unityPackagePath
+        {
+            get { return m_UnityPackagePath; }
+            set { m_UnityPackagePath = value; }
+        }
 
         public bool isInstalled
         {
@@ -41,6 +52,7 @@ namespace threeDtbd.Workflow.PackageManagement
                     return matchingPackages.Count > 0;
                 }
             }
+            set { _isLocalPackageInstalled = value; }
         }
 
         public bool IsLocalAsset
@@ -89,6 +101,64 @@ namespace threeDtbd.Workflow.PackageManagement
             desc.packageType = AssetDescriptor.PackageType.Git;
 
             return desc;
+        }
+
+        internal static AssetDescriptor CreateInstanceFromPackageInfo(PackageInfo info)
+        {
+            AssetDescriptor desc = ScriptableObject.CreateInstance<AssetDescriptor>();
+            desc.name = info.displayName;
+            desc.id = info.packageId;
+            desc.unityPackagePath = info.assetPath;
+            desc.packageType = AssetDescriptor.PackageType.Package;
+
+            return desc;
+        }
+
+        internal static AssetDescriptor CreateInstanceFromLocalPackage(string filepath)
+        {
+            Type t = GetTypeFor(filepath);
+
+            AssetDescriptor desc = ScriptableObject.CreateInstance(t.FullName) as AssetDescriptor;
+            if (t == typeof(AssetDescriptor))
+            {
+                desc.unityPackagePath = filepath;
+            }
+            desc.name = Path.GetFileNameWithoutExtension(filepath);
+            desc.packageType = AssetDescriptor.PackageType.LocalAsset;
+
+            return desc;
+        }
+
+        /// <summary>
+        /// Returns a Type, always of or descended from AssetDescriptor, that will represent this the asset at the given path.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private static Type GetTypeFor(string path)
+        {
+            // TODO cache results for performance
+            Type[] types = typeof(AssetDescriptor).Assembly.GetTypes();
+            foreach (Type t in types)
+            {
+                AssetDescriptor instance = null;
+                if (t.IsSubclassOf(typeof(AssetDescriptor)))
+                {
+                    instance = ScriptableObject.CreateInstance(t.FullName) as AssetDescriptor;
+                    PropertyInfo pathProperty = t.GetProperty("unityPackagePath");
+                    if (path.EndsWith((string)t.GetProperty("unityPackagePath").GetValue(instance)))
+                    {
+                        ScriptableObject.DestroyImmediate(instance);
+                        return t;
+                    }
+                }
+
+                if (instance != null)
+                {
+                    ScriptableObject.DestroyImmediate(instance);
+                }
+            }
+
+            return typeof(AssetDescriptor);
         }
     }
 }

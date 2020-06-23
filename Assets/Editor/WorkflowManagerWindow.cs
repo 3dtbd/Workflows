@@ -7,7 +7,6 @@ using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
-using WizardsCode.Controller;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace threeDtbd.Workflow.PackageManagement
@@ -290,6 +289,10 @@ namespace threeDtbd.Workflow.PackageManagement
         {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(desc.name);
+            if (GUILayout.Button("Remove from Workflow Stage"))
+            {
+                stage.Remove(desc.name);
+            }
             if (GUILayout.Button("Install"))
             {
                 desc.Install();
@@ -336,12 +339,7 @@ namespace threeDtbd.Workflow.PackageManagement
                                   : new List<string>();
             foreach (string package in packages)
             {
-                AssetDescriptor desc = ScriptableObject.CreateInstance<AssetDescriptor>();
-                desc.unityPackagePath = package;
-                desc.name = Path.GetFileNameWithoutExtension(package);
-                desc.packageType = AssetDescriptor.PackageType.LocalAsset;
-
-                updatedPackageList.Add(desc);
+                updatedPackageList.Add(AssetDescriptor.CreateInstanceFromLocalPackage(package));
             }
         }
 
@@ -353,12 +351,7 @@ namespace threeDtbd.Workflow.PackageManagement
                 {
                     foreach (PackageInfo package in searchRequest.Result)
                     {
-                        AssetDescriptor desc = ScriptableObject.CreateInstance<AssetDescriptor>();
-                        desc.name = package.displayName; 
-                        desc.id = package.packageId;
-                        desc.unityPackagePath = package.assetPath;
-                        desc.packageType = AssetDescriptor.PackageType.Package;
-                        updatedPackageList.Add(desc);
+                        updatedPackageList.Add(AssetDescriptor.CreateInstanceFromPackageInfo(package));
                     }
                 }
                 else if (searchRequest.Status >= StatusCode.Failure)
