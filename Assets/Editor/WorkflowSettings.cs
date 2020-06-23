@@ -24,7 +24,8 @@ namespace threeDtbd.Workflow
             "git@github.com:3dtbd/nvjob-water-shader-simple-and-fast.git",
             "git@github.com:3dtbd/nvjob-sky-shader-simple-and-fast.git",
             "git@github.com:3dtbd/TheFirstPerson.git",
-            "git@github.com:3dtbd/UnitySensesSystem.git"
+            "git@github.com:3dtbd/UnitySensesSystem.git",
+            "git@github.com:3dtbd/crest.git"
         };
 
         public static void Load()
