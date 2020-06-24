@@ -19,7 +19,9 @@ namespace threeDtbd.Workflow
         public static string stagesDataDirectory;
 
         public static string[] openSourceGitURIs = new string[] { "git@github.com:3dtbd/Textures.git", 
-            "git@github.com:3dtbd/DevLogger.git", "git@github.com:3dtbd/Models.git", 
+            "git@github.com:3dtbd/DevLogger.git", 
+            "git@github.com:3dtbd/Models.git",
+            "git@github.com:3dtbd/Terrains.git",
             "git@github.com:3dtbd/VegetationStudioProExtensions.git",
             "git@github.com:3dtbd/nvjob-water-shader-simple-and-fast.git",
             "git@github.com:3dtbd/nvjob-sky-shader-simple-and-fast.git",
