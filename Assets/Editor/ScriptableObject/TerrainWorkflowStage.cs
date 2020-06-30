@@ -55,6 +55,8 @@ namespace threeDtbd.Workflow.PackageManagement
 
         private void ExportTerrain()
         {
+            AssetDatabase.Refresh();
+
             Directory.CreateDirectory(m_TerrainDataDirectory);
             Directory.CreateDirectory(m_TerrainLayersDirectory);
 
